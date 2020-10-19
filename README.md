@@ -24,3 +24,6 @@ Place the vehiclecontrol folder into your resources directory.
 Add start vehiclecontrol to your server.cfg
 
 We hope you enjoy our first release. We hope to bring much more content to the community in time.
+
+
+BackToBasics Discord: https://discord.gg/PB3yG59
