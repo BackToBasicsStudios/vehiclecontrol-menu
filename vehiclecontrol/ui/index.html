@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<style>
+            #menu{
+				display: none;
+                font-family: 'Roboto', sans-serif;
+                min-height: 350px;
+                background: rgb(60, 60, 60);
+                color: white;
+                min-width: 200px;
+                position: absolute;
+                top: 45%;
+                left: 15px;
+                transform: translate(0px, -50%);
+			}
+			p{
+				padding-left: 15px;
+			}
+			.selected{
+				color: cornflowerblue;
+			}
+			.locked{
+				color: #aaa;
+			}
+        </style>
+
+		<script>
+			$(function(){
+				window.addEventListener('message', function(event) {
+					if(event.data == "openmenu"){
+						$("#menu").css('display', "block");
+						selected = 1;
+						MoveUp();
+					}else if(event.data == "closemenu"){
+						$("#menu").css('display', "none");
+					}else if(event.data == "moveup"){
+						MoveUp()
+					}else if (event.data == "movedown"){
+						MoveDown()
+					}else if(event.data == "execute"){
+						$.post("http://vehiclecontrol/nuiexecute", JSON.stringify({data: $(".selected").attr('id')}));
+					}
+				});
+			});
+
+			function MoveUp(){
+				if(selected - 1 >= 0){
+					selected = selected - 1;
+				}else{
+					selected = $("p").length - 1;
+				}
+				if($("p:nth-child("+(selected + 1)+")").hasClass("locked")){
+					MoveUp();
+				}else{
+					$(".selected").removeClass("selected");
+					$("p:nth-child("+(selected + 1)+")").addClass("selected");
+				}
+			}
+			function MoveDown(){
+				if(selected + 1 < $("p").length){
+					selected = selected + 1;
+				}else{
+					selected = 0;
+				}
+				if($("p:nth-child("+(selected + 1)+")").hasClass("locked")){
+					MoveDown();
+				}else{
+					$(".selected").removeClass("selected");
+					$("p:nth-child("+(selected + 1)+")").addClass("selected");
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="menu">
+			<h3 style=text-align:center;>Vehicle Control<br><small style=color:orange;>BackToBasics</small></h3>
+			<div>
+				<p id="engine">Toggle Engine</p>
+				<p id="window1">Roll Driver Window</p>
+				<p id="window2">Roll Passenger Window</p>
+				<p id="alarmon">Start Alarm</p>
+				<p id="alarmoff">Stop Alarm</p>
+				<p id="lockcar" class="locked">Lock/Unlock Doors</p>
+				<p id="trunk">Open/Close Trunk</p>
+				<p id="hood">Open/Close Hood</p>
+			</div>
+        </div>
+	</body>
+</html>
